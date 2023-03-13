@@ -1,0 +1,2651 @@
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: GlobalStatementList
+
+    2 GlobalStatementList: GlobalStatementList GlobalStatement
+    3                    | GlobalStatement
+
+    4 GlobalStatement: PackageStmt NEWLINE
+    5                | FunctionDeclStmt
+    6                | NEWLINE
+
+    7 PackageStmt: PACKAGE ID
+
+    8 Type: INT
+    9     | FLOAT
+   10     | STRING
+   11     | BOOL
+
+   12 Expression: Assignment_expression
+
+   13 Assignment_expression: Lor_expression
+   14                      | UnaryExpr assignment_op Assignment_expression
+
+   15 Lor_expression: Land_expression
+   16               | Lor_expression LOR Land_expression
+
+   17 Land_expression: Cmp_expression
+   18                | Land_expression LAND Cmp_expression
+
+   19 Cmp_expression: Add_expression
+   20               | Cmp_expression cmp_op Add_expression
+
+   21 Add_expression: Mul_expression
+   22               | Add_expression add_op Mul_expression
+
+   23 Mul_expression: Cast_expression
+   24               | Mul_expression mul_op Cast_expression
+
+   25 Cast_expression: UnaryExpr
+   26                | ConversionExpr
+
+   27 UnaryExpr: PrimaryExpr
+   28          | unary_op Cast_expression
+
+   29 assignment_op: '='
+   30              | ADD_ASSIGN
+   31              | SUB_ASSIGN
+   32              | MUL_ASSIGN
+   33              | QUO_ASSIGN
+   34              | REM_ASSIGN
+
+   35 cmp_op: EQU
+   36       | NEQ
+   37       | '<'
+   38       | LEQ
+   39       | '>'
+   40       | GEQ
+
+   41 add_op: '+'
+   42       | '-'
+
+   43 mul_op: '*'
+   44       | '/'
+   45       | '%'
+
+   46 unary_op: '+'
+   47         | '-'
+   48         | '!'
+
+   49 PrimaryExpr: Operand
+
+   50 Operand: Literal
+   51        | ID
+   52        | '(' Expression ')'
+   53        | TRUE
+   54        | FALSE
+
+   55 Literal: INT_LIT
+   56        | FLOAT_LIT
+   57        | '"' Str '"'
+
+   58 Str: Str STRING_LIT
+   59    | STRING_LIT
+
+   60 ConversionExpr: Type '(' Expression ')'
+
+   61 Statement: DeclarationStmt NEWLINE
+   62          | FunctionCall NEWLINE
+   63          | SimpleStmt NEWLINE
+   64          | Block
+   65          | IfStmt
+   66          | ForStmt
+   67          | SwitchStmt
+   68          | CaseStmt
+   69          | PrintStmt NEWLINE
+   70          | ReturnStmt NEWLINE
+   71          | NEWLINE
+
+   72 FunctionCall: CallID '(' ')'
+   73             | CallID '(' Parameters_call ')'
+
+   74 CallID: ID
+
+   75 Parameters_call: Operand
+   76                | Parameters_call ',' Operand
+
+   77 SimpleStmt: Expression
+   78           | IncDecStmt
+
+   79 DeclarationStmt: VAR VarID VarType
+   80                | VAR VarID VarType '=' Expression
+   81                | VAR VarID VarType '=' FunctionCall
+
+   82 VarID: ID
+
+   83 VarType: Type
+
+   84 IncDecStmt: Expression INC
+   85           | Expression DEC
+
+   86 Block: LParantheses StatementList RParantheses
+
+   87 LParantheses: '{'
+
+   88 RParantheses: '}'
+
+   89 StatementList: Statement
+   90              | StatementList Statement
+
+   91 IfStmt: IF Condition Block ElseStmt
+
+   92 ElseStmt: %empty
+   93         | ELSE IfStmt
+   94         | ELSE Block
+
+   95 Condition: Expression
+
+   96 ForCondition: Expression
+
+   97 ForStmt: For ForCondition Block
+   98        | For ForClause Block
+
+   99 For: FOR
+
+  100 ForClause: InitStmt ';' Condition ';' PostStmt
+
+  101 InitStmt: SimpleStmt
+
+  102 PostStmt: SimpleStmt
+
+  103 SwitchStmt: SwitchPrototype Block
+
+  104 SwitchPrototype: SWITCH Expression
+
+  105 CaseStmt: Case ':' Block
+  106         | Default ':' Block
+
+  107 Case: CASE INT_LIT
+
+  108 Default: DEFAULT
+
+  109 FunctionDeclStmt: FuncPrototype FuncBlock
+
+  110 FuncPrototype: FuncTitle FuncParameters Type LParantheses
+  111              | FuncTitle FuncParameters LParantheses
+
+  112 FuncParameters: '(' ParameterList ')'
+  113               | '(' ')'
+
+  114 FuncTitle: FUNC ID
+
+  115 ParameterList: ParID Type
+  116              | ParameterList ',' ParID Type
+
+  117 ParID: ID
+
+  118 FuncBlock: StatementList RParantheses
+
+  119 ReturnStmt: RETURN
+  120           | RETURN Expression
+
+  121 PrintStmt: PRINT '(' Expression ')'
+  122          | PRINTLN '(' Expression ')'
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'!' (33) 48
+'"' (34) 57
+'%' (37) 45
+'(' (40) 52 60 72 73 112 113 121 122
+')' (41) 52 60 72 73 112 113 121 122
+'*' (42) 43
+'+' (43) 41 46
+',' (44) 76 116
+'-' (45) 42 47
+'/' (47) 44
+':' (58) 105 106
+';' (59) 100
+'<' (60) 37
+'=' (61) 29 80 81
+'>' (62) 39
+'{' (123) 87
+'}' (125) 88
+error (256)
+VAR (258) 79 80 81
+NEWLINE (259) 4 6 61 62 63 69 70 71
+INT (260) 8
+FLOAT (261) 9
+BOOL (262) 11
+STRING (263) 10
+INC (264) 84
+DEC (265) 85
+GEQ (266) 40
+LOR (267) 16
+LAND (268) 18
+LEQ (269) 38
+EQU (270) 35
+NEQ (271) 36
+ADD_ASSIGN (272) 30
+SUB_ASSIGN (273) 31
+MUL_ASSIGN (274) 32
+QUO_ASSIGN (275) 33
+REM_ASSIGN (276) 34
+IF (277) 91
+ELSE (278) 93 94
+FOR (279) 99
+SWITCH (280) 104
+CASE (281) 107
+PRINT (282) 121
+PRINTLN (283) 122
+TRUE (284) 53
+FALSE (285) 54
+PACKAGE (286) 7
+FUNC (287) 114
+ID (288) 7 51 74 82 114 117
+RETURN (289) 119 120
+DEFAULT (290) 108
+INT_LIT (291) 55 107
+STRING_LIT (292) 58 59
+FLOAT_LIT (293) 56
+
+
+Nonterminals, with rules where they appear
+
+$accept (56)
+    on left: 0
+Program (57)
+    on left: 1, on right: 0
+GlobalStatementList (58)
+    on left: 2 3, on right: 1 2
+GlobalStatement (59)
+    on left: 4 5 6, on right: 2 3
+PackageStmt (60)
+    on left: 7, on right: 4
+Type (61)
+    on left: 8 9 10 11, on right: 60 83 110 115 116
+Expression (62)
+    on left: 12, on right: 52 60 77 80 84 85 95 96 104 120 121 122
+Assignment_expression (63)
+    on left: 13 14, on right: 12 14
+Lor_expression (64)
+    on left: 15 16, on right: 13 16
+Land_expression (65)
+    on left: 17 18, on right: 15 16 18
+Cmp_expression (66)
+    on left: 19 20, on right: 17 18 20
+Add_expression (67)
+    on left: 21 22, on right: 19 20 22
+Mul_expression (68)
+    on left: 23 24, on right: 21 22 24
+Cast_expression (69)
+    on left: 25 26, on right: 23 24 28
+UnaryExpr (70)
+    on left: 27 28, on right: 14 25
+assignment_op (71)
+    on left: 29 30 31 32 33 34, on right: 14
+cmp_op (72)
+    on left: 35 36 37 38 39 40, on right: 20
+add_op (73)
+    on left: 41 42, on right: 22
+mul_op (74)
+    on left: 43 44 45, on right: 24
+unary_op (75)
+    on left: 46 47 48, on right: 28
+PrimaryExpr (76)
+    on left: 49, on right: 27
+Operand (77)
+    on left: 50 51 52 53 54, on right: 49 75 76
+Literal (78)
+    on left: 55 56 57, on right: 50
+Str (79)
+    on left: 58 59, on right: 57 58
+ConversionExpr (80)
+    on left: 60, on right: 26
+Statement (81)
+    on left: 61 62 63 64 65 66 67 68 69 70 71, on right: 89 90
+FunctionCall (82)
+    on left: 72 73, on right: 62 81
+CallID (83)
+    on left: 74, on right: 72 73
+Parameters_call (84)
+    on left: 75 76, on right: 73 76
+SimpleStmt (85)
+    on left: 77 78, on right: 63 101 102
+DeclarationStmt (86)
+    on left: 79 80 81, on right: 61
+VarID (87)
+    on left: 82, on right: 79 80 81
+VarType (88)
+    on left: 83, on right: 79 80 81
+IncDecStmt (89)
+    on left: 84 85, on right: 78
+Block (90)
+    on left: 86, on right: 64 91 94 97 98 103 105 106
+LParantheses (91)
+    on left: 87, on right: 86 110 111
+RParantheses (92)
+    on left: 88, on right: 86 118
+StatementList (93)
+    on left: 89 90, on right: 86 90 118
+IfStmt (94)
+    on left: 91, on right: 65 93
+ElseStmt (95)
+    on left: 92 93 94, on right: 91
+Condition (96)
+    on left: 95, on right: 91 100
+ForCondition (97)
+    on left: 96, on right: 97
+ForStmt (98)
+    on left: 97 98, on right: 66
+For (99)
+    on left: 99, on right: 97 98
+ForClause (100)
+    on left: 100, on right: 98
+InitStmt (101)
+    on left: 101, on right: 100
+PostStmt (102)
+    on left: 102, on right: 100
+SwitchStmt (103)
+    on left: 103, on right: 67
+SwitchPrototype (104)
+    on left: 104, on right: 103
+CaseStmt (105)
+    on left: 105 106, on right: 68
+Case (106)
+    on left: 107, on right: 105
+Default (107)
+    on left: 108, on right: 106
+FunctionDeclStmt (108)
+    on left: 109, on right: 5
+FuncPrototype (109)
+    on left: 110 111, on right: 109
+FuncParameters (110)
+    on left: 112 113, on right: 110 111
+FuncTitle (111)
+    on left: 114, on right: 110 111
+ParameterList (112)
+    on left: 115 116, on right: 112 116
+ParID (113)
+    on left: 117, on right: 115 116
+FuncBlock (114)
+    on left: 118, on right: 109
+ReturnStmt (115)
+    on left: 119 120, on right: 70
+PrintStmt (116)
+    on left: 121 122, on right: 69
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    NEWLINE  shift, and go to state 1
+    PACKAGE  shift, and go to state 2
+    FUNC     shift, and go to state 3
+
+    Program              go to state 4
+    GlobalStatementList  go to state 5
+    GlobalStatement      go to state 6
+    PackageStmt          go to state 7
+    FunctionDeclStmt     go to state 8
+    FuncPrototype        go to state 9
+    FuncTitle            go to state 10
+
+
+State 1
+
+    6 GlobalStatement: NEWLINE .
+
+    $default  reduce using rule 6 (GlobalStatement)
+
+
+State 2
+
+    7 PackageStmt: PACKAGE . ID
+
+    ID  shift, and go to state 11
+
+
+State 3
+
+  114 FuncTitle: FUNC . ID
+
+    ID  shift, and go to state 12
+
+
+State 4
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 13
+
+
+State 5
+
+    1 Program: GlobalStatementList .
+    2 GlobalStatementList: GlobalStatementList . GlobalStatement
+
+    NEWLINE  shift, and go to state 1
+    PACKAGE  shift, and go to state 2
+    FUNC     shift, and go to state 3
+
+    $default  reduce using rule 1 (Program)
+
+    GlobalStatement   go to state 14
+    PackageStmt       go to state 7
+    FunctionDeclStmt  go to state 8
+    FuncPrototype     go to state 9
+    FuncTitle         go to state 10
+
+
+State 6
+
+    3 GlobalStatementList: GlobalStatement .
+
+    $default  reduce using rule 3 (GlobalStatementList)
+
+
+State 7
+
+    4 GlobalStatement: PackageStmt . NEWLINE
+
+    NEWLINE  shift, and go to state 15
+
+
+State 8
+
+    5 GlobalStatement: FunctionDeclStmt .
+
+    $default  reduce using rule 5 (GlobalStatement)
+
+
+State 9
+
+  109 FunctionDeclStmt: FuncPrototype . FuncBlock
+
+    VAR        shift, and go to state 16
+    NEWLINE    shift, and go to state 17
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    IF         shift, and go to state 22
+    FOR        shift, and go to state 23
+    SWITCH     shift, and go to state 24
+    CASE       shift, and go to state 25
+    PRINT      shift, and go to state 26
+    PRINTLN    shift, and go to state 27
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 30
+    RETURN     shift, and go to state 31
+    DEFAULT    shift, and go to state 32
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+    '{'        shift, and go to state 40
+
+    Type                   go to state 41
+    Expression             go to state 42
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    Statement              go to state 56
+    FunctionCall           go to state 57
+    CallID                 go to state 58
+    SimpleStmt             go to state 59
+    DeclarationStmt        go to state 60
+    IncDecStmt             go to state 61
+    Block                  go to state 62
+    LParantheses           go to state 63
+    StatementList          go to state 64
+    IfStmt                 go to state 65
+    ForStmt                go to state 66
+    For                    go to state 67
+    SwitchStmt             go to state 68
+    SwitchPrototype        go to state 69
+    CaseStmt               go to state 70
+    Case                   go to state 71
+    Default                go to state 72
+    FuncBlock              go to state 73
+    ReturnStmt             go to state 74
+    PrintStmt              go to state 75
+
+
+State 10
+
+  110 FuncPrototype: FuncTitle . FuncParameters Type LParantheses
+  111              | FuncTitle . FuncParameters LParantheses
+
+    '('  shift, and go to state 76
+
+    FuncParameters  go to state 77
+
+
+State 11
+
+    7 PackageStmt: PACKAGE ID .
+
+    $default  reduce using rule 7 (PackageStmt)
+
+
+State 12
+
+  114 FuncTitle: FUNC ID .
+
+    $default  reduce using rule 114 (FuncTitle)
+
+
+State 13
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 14
+
+    2 GlobalStatementList: GlobalStatementList GlobalStatement .
+
+    $default  reduce using rule 2 (GlobalStatementList)
+
+
+State 15
+
+    4 GlobalStatement: PackageStmt NEWLINE .
+
+    $default  reduce using rule 4 (GlobalStatement)
+
+
+State 16
+
+   79 DeclarationStmt: VAR . VarID VarType
+   80                | VAR . VarID VarType '=' Expression
+   81                | VAR . VarID VarType '=' FunctionCall
+
+    ID  shift, and go to state 78
+
+    VarID  go to state 79
+
+
+State 17
+
+   71 Statement: NEWLINE .
+
+    $default  reduce using rule 71 (Statement)
+
+
+State 18
+
+    8 Type: INT .
+
+    $default  reduce using rule 8 (Type)
+
+
+State 19
+
+    9 Type: FLOAT .
+
+    $default  reduce using rule 9 (Type)
+
+
+State 20
+
+   11 Type: BOOL .
+
+    $default  reduce using rule 11 (Type)
+
+
+State 21
+
+   10 Type: STRING .
+
+    $default  reduce using rule 10 (Type)
+
+
+State 22
+
+   91 IfStmt: IF . Condition Block ElseStmt
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 81
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    Condition              go to state 82
+
+
+State 23
+
+   99 For: FOR .
+
+    $default  reduce using rule 99 (For)
+
+
+State 24
+
+  104 SwitchPrototype: SWITCH . Expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 83
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 25
+
+  107 Case: CASE . INT_LIT
+
+    INT_LIT  shift, and go to state 84
+
+
+State 26
+
+  121 PrintStmt: PRINT . '(' Expression ')'
+
+    '('  shift, and go to state 85
+
+
+State 27
+
+  122 PrintStmt: PRINTLN . '(' Expression ')'
+
+    '('  shift, and go to state 86
+
+
+State 28
+
+   53 Operand: TRUE .
+
+    $default  reduce using rule 53 (Operand)
+
+
+State 29
+
+   54 Operand: FALSE .
+
+    $default  reduce using rule 54 (Operand)
+
+
+State 30
+
+   51 Operand: ID .
+   74 CallID: ID .
+
+    '('       reduce using rule 74 (CallID)
+    $default  reduce using rule 51 (Operand)
+
+
+State 31
+
+  119 ReturnStmt: RETURN .
+  120           | RETURN . Expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    $default  reduce using rule 119 (ReturnStmt)
+
+    Type                   go to state 41
+    Expression             go to state 87
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 32
+
+  108 Default: DEFAULT .
+
+    $default  reduce using rule 108 (Default)
+
+
+State 33
+
+   55 Literal: INT_LIT .
+
+    $default  reduce using rule 55 (Literal)
+
+
+State 34
+
+   56 Literal: FLOAT_LIT .
+
+    $default  reduce using rule 56 (Literal)
+
+
+State 35
+
+   46 unary_op: '+' .
+
+    $default  reduce using rule 46 (unary_op)
+
+
+State 36
+
+   47 unary_op: '-' .
+
+    $default  reduce using rule 47 (unary_op)
+
+
+State 37
+
+   48 unary_op: '!' .
+
+    $default  reduce using rule 48 (unary_op)
+
+
+State 38
+
+   52 Operand: '(' . Expression ')'
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 88
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 39
+
+   57 Literal: '"' . Str '"'
+
+    STRING_LIT  shift, and go to state 89
+
+    Str  go to state 90
+
+
+State 40
+
+   87 LParantheses: '{' .
+
+    $default  reduce using rule 87 (LParantheses)
+
+
+State 41
+
+   60 ConversionExpr: Type . '(' Expression ')'
+
+    '('  shift, and go to state 91
+
+
+State 42
+
+   77 SimpleStmt: Expression .
+   84 IncDecStmt: Expression . INC
+   85           | Expression . DEC
+
+    INC  shift, and go to state 92
+    DEC  shift, and go to state 93
+
+    $default  reduce using rule 77 (SimpleStmt)
+
+
+State 43
+
+   12 Expression: Assignment_expression .
+
+    $default  reduce using rule 12 (Expression)
+
+
+State 44
+
+   13 Assignment_expression: Lor_expression .
+   16 Lor_expression: Lor_expression . LOR Land_expression
+
+    LOR  shift, and go to state 94
+
+    $default  reduce using rule 13 (Assignment_expression)
+
+
+State 45
+
+   15 Lor_expression: Land_expression .
+   18 Land_expression: Land_expression . LAND Cmp_expression
+
+    LAND  shift, and go to state 95
+
+    $default  reduce using rule 15 (Lor_expression)
+
+
+State 46
+
+   17 Land_expression: Cmp_expression .
+   20 Cmp_expression: Cmp_expression . cmp_op Add_expression
+
+    GEQ  shift, and go to state 96
+    LEQ  shift, and go to state 97
+    EQU  shift, and go to state 98
+    NEQ  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '>'  shift, and go to state 101
+
+    $default  reduce using rule 17 (Land_expression)
+
+    cmp_op  go to state 102
+
+
+State 47
+
+   19 Cmp_expression: Add_expression .
+   22 Add_expression: Add_expression . add_op Mul_expression
+
+    '+'  shift, and go to state 103
+    '-'  shift, and go to state 104
+
+    $default  reduce using rule 19 (Cmp_expression)
+
+    add_op  go to state 105
+
+
+State 48
+
+   21 Add_expression: Mul_expression .
+   24 Mul_expression: Mul_expression . mul_op Cast_expression
+
+    '*'  shift, and go to state 106
+    '/'  shift, and go to state 107
+    '%'  shift, and go to state 108
+
+    $default  reduce using rule 21 (Add_expression)
+
+    mul_op  go to state 109
+
+
+State 49
+
+   23 Mul_expression: Cast_expression .
+
+    $default  reduce using rule 23 (Mul_expression)
+
+
+State 50
+
+   14 Assignment_expression: UnaryExpr . assignment_op Assignment_expression
+   25 Cast_expression: UnaryExpr .
+
+    ADD_ASSIGN  shift, and go to state 110
+    SUB_ASSIGN  shift, and go to state 111
+    MUL_ASSIGN  shift, and go to state 112
+    QUO_ASSIGN  shift, and go to state 113
+    REM_ASSIGN  shift, and go to state 114
+    '='         shift, and go to state 115
+
+    $default  reduce using rule 25 (Cast_expression)
+
+    assignment_op  go to state 116
+
+
+State 51
+
+   28 UnaryExpr: unary_op . Cast_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type             go to state 41
+    Cast_expression  go to state 117
+    UnaryExpr        go to state 118
+    unary_op         go to state 51
+    PrimaryExpr      go to state 52
+    Operand          go to state 53
+    Literal          go to state 54
+    ConversionExpr   go to state 55
+
+
+State 52
+
+   27 UnaryExpr: PrimaryExpr .
+
+    $default  reduce using rule 27 (UnaryExpr)
+
+
+State 53
+
+   49 PrimaryExpr: Operand .
+
+    $default  reduce using rule 49 (PrimaryExpr)
+
+
+State 54
+
+   50 Operand: Literal .
+
+    $default  reduce using rule 50 (Operand)
+
+
+State 55
+
+   26 Cast_expression: ConversionExpr .
+
+    $default  reduce using rule 26 (Cast_expression)
+
+
+State 56
+
+   89 StatementList: Statement .
+
+    $default  reduce using rule 89 (StatementList)
+
+
+State 57
+
+   62 Statement: FunctionCall . NEWLINE
+
+    NEWLINE  shift, and go to state 119
+
+
+State 58
+
+   72 FunctionCall: CallID . '(' ')'
+   73             | CallID . '(' Parameters_call ')'
+
+    '('  shift, and go to state 120
+
+
+State 59
+
+   63 Statement: SimpleStmt . NEWLINE
+
+    NEWLINE  shift, and go to state 121
+
+
+State 60
+
+   61 Statement: DeclarationStmt . NEWLINE
+
+    NEWLINE  shift, and go to state 122
+
+
+State 61
+
+   78 SimpleStmt: IncDecStmt .
+
+    $default  reduce using rule 78 (SimpleStmt)
+
+
+State 62
+
+   64 Statement: Block .
+
+    $default  reduce using rule 64 (Statement)
+
+
+State 63
+
+   86 Block: LParantheses . StatementList RParantheses
+
+    VAR        shift, and go to state 16
+    NEWLINE    shift, and go to state 17
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    IF         shift, and go to state 22
+    FOR        shift, and go to state 23
+    SWITCH     shift, and go to state 24
+    CASE       shift, and go to state 25
+    PRINT      shift, and go to state 26
+    PRINTLN    shift, and go to state 27
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 30
+    RETURN     shift, and go to state 31
+    DEFAULT    shift, and go to state 32
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+    '{'        shift, and go to state 40
+
+    Type                   go to state 41
+    Expression             go to state 42
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    Statement              go to state 56
+    FunctionCall           go to state 57
+    CallID                 go to state 58
+    SimpleStmt             go to state 59
+    DeclarationStmt        go to state 60
+    IncDecStmt             go to state 61
+    Block                  go to state 62
+    LParantheses           go to state 63
+    StatementList          go to state 123
+    IfStmt                 go to state 65
+    ForStmt                go to state 66
+    For                    go to state 67
+    SwitchStmt             go to state 68
+    SwitchPrototype        go to state 69
+    CaseStmt               go to state 70
+    Case                   go to state 71
+    Default                go to state 72
+    ReturnStmt             go to state 74
+    PrintStmt              go to state 75
+
+
+State 64
+
+   90 StatementList: StatementList . Statement
+  118 FuncBlock: StatementList . RParantheses
+
+    VAR        shift, and go to state 16
+    NEWLINE    shift, and go to state 17
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    IF         shift, and go to state 22
+    FOR        shift, and go to state 23
+    SWITCH     shift, and go to state 24
+    CASE       shift, and go to state 25
+    PRINT      shift, and go to state 26
+    PRINTLN    shift, and go to state 27
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 30
+    RETURN     shift, and go to state 31
+    DEFAULT    shift, and go to state 32
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+    '{'        shift, and go to state 40
+    '}'        shift, and go to state 124
+
+    Type                   go to state 41
+    Expression             go to state 42
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    Statement              go to state 125
+    FunctionCall           go to state 57
+    CallID                 go to state 58
+    SimpleStmt             go to state 59
+    DeclarationStmt        go to state 60
+    IncDecStmt             go to state 61
+    Block                  go to state 62
+    LParantheses           go to state 63
+    RParantheses           go to state 126
+    IfStmt                 go to state 65
+    ForStmt                go to state 66
+    For                    go to state 67
+    SwitchStmt             go to state 68
+    SwitchPrototype        go to state 69
+    CaseStmt               go to state 70
+    Case                   go to state 71
+    Default                go to state 72
+    ReturnStmt             go to state 74
+    PrintStmt              go to state 75
+
+
+State 65
+
+   65 Statement: IfStmt .
+
+    $default  reduce using rule 65 (Statement)
+
+
+State 66
+
+   66 Statement: ForStmt .
+
+    $default  reduce using rule 66 (Statement)
+
+
+State 67
+
+   97 ForStmt: For . ForCondition Block
+   98        | For . ForClause Block
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 127
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    SimpleStmt             go to state 128
+    IncDecStmt             go to state 61
+    ForCondition           go to state 129
+    ForClause              go to state 130
+    InitStmt               go to state 131
+
+
+State 68
+
+   67 Statement: SwitchStmt .
+
+    $default  reduce using rule 67 (Statement)
+
+
+State 69
+
+  103 SwitchStmt: SwitchPrototype . Block
+
+    '{'  shift, and go to state 40
+
+    Block         go to state 132
+    LParantheses  go to state 63
+
+
+State 70
+
+   68 Statement: CaseStmt .
+
+    $default  reduce using rule 68 (Statement)
+
+
+State 71
+
+  105 CaseStmt: Case . ':' Block
+
+    ':'  shift, and go to state 133
+
+
+State 72
+
+  106 CaseStmt: Default . ':' Block
+
+    ':'  shift, and go to state 134
+
+
+State 73
+
+  109 FunctionDeclStmt: FuncPrototype FuncBlock .
+
+    $default  reduce using rule 109 (FunctionDeclStmt)
+
+
+State 74
+
+   70 Statement: ReturnStmt . NEWLINE
+
+    NEWLINE  shift, and go to state 135
+
+
+State 75
+
+   69 Statement: PrintStmt . NEWLINE
+
+    NEWLINE  shift, and go to state 136
+
+
+State 76
+
+  112 FuncParameters: '(' . ParameterList ')'
+  113               | '(' . ')'
+
+    ID   shift, and go to state 137
+    ')'  shift, and go to state 138
+
+    ParameterList  go to state 139
+    ParID          go to state 140
+
+
+State 77
+
+  110 FuncPrototype: FuncTitle FuncParameters . Type LParantheses
+  111              | FuncTitle FuncParameters . LParantheses
+
+    INT     shift, and go to state 18
+    FLOAT   shift, and go to state 19
+    BOOL    shift, and go to state 20
+    STRING  shift, and go to state 21
+    '{'     shift, and go to state 40
+
+    Type          go to state 141
+    LParantheses  go to state 142
+
+
+State 78
+
+   82 VarID: ID .
+
+    $default  reduce using rule 82 (VarID)
+
+
+State 79
+
+   79 DeclarationStmt: VAR VarID . VarType
+   80                | VAR VarID . VarType '=' Expression
+   81                | VAR VarID . VarType '=' FunctionCall
+
+    INT     shift, and go to state 18
+    FLOAT   shift, and go to state 19
+    BOOL    shift, and go to state 20
+    STRING  shift, and go to state 21
+
+    Type     go to state 143
+    VarType  go to state 144
+
+
+State 80
+
+   51 Operand: ID .
+
+    $default  reduce using rule 51 (Operand)
+
+
+State 81
+
+   95 Condition: Expression .
+
+    $default  reduce using rule 95 (Condition)
+
+
+State 82
+
+   91 IfStmt: IF Condition . Block ElseStmt
+
+    '{'  shift, and go to state 40
+
+    Block         go to state 145
+    LParantheses  go to state 63
+
+
+State 83
+
+  104 SwitchPrototype: SWITCH Expression .
+
+    $default  reduce using rule 104 (SwitchPrototype)
+
+
+State 84
+
+  107 Case: CASE INT_LIT .
+
+    $default  reduce using rule 107 (Case)
+
+
+State 85
+
+  121 PrintStmt: PRINT '(' . Expression ')'
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 146
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 86
+
+  122 PrintStmt: PRINTLN '(' . Expression ')'
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 147
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 87
+
+  120 ReturnStmt: RETURN Expression .
+
+    $default  reduce using rule 120 (ReturnStmt)
+
+
+State 88
+
+   52 Operand: '(' Expression . ')'
+
+    ')'  shift, and go to state 148
+
+
+State 89
+
+   59 Str: STRING_LIT .
+
+    $default  reduce using rule 59 (Str)
+
+
+State 90
+
+   57 Literal: '"' Str . '"'
+   58 Str: Str . STRING_LIT
+
+    STRING_LIT  shift, and go to state 149
+    '"'         shift, and go to state 150
+
+
+State 91
+
+   60 ConversionExpr: Type '(' . Expression ')'
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 151
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 92
+
+   84 IncDecStmt: Expression INC .
+
+    $default  reduce using rule 84 (IncDecStmt)
+
+
+State 93
+
+   85 IncDecStmt: Expression DEC .
+
+    $default  reduce using rule 85 (IncDecStmt)
+
+
+State 94
+
+   16 Lor_expression: Lor_expression LOR . Land_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type             go to state 41
+    Land_expression  go to state 152
+    Cmp_expression   go to state 46
+    Add_expression   go to state 47
+    Mul_expression   go to state 48
+    Cast_expression  go to state 49
+    UnaryExpr        go to state 118
+    unary_op         go to state 51
+    PrimaryExpr      go to state 52
+    Operand          go to state 53
+    Literal          go to state 54
+    ConversionExpr   go to state 55
+
+
+State 95
+
+   18 Land_expression: Land_expression LAND . Cmp_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type             go to state 41
+    Cmp_expression   go to state 153
+    Add_expression   go to state 47
+    Mul_expression   go to state 48
+    Cast_expression  go to state 49
+    UnaryExpr        go to state 118
+    unary_op         go to state 51
+    PrimaryExpr      go to state 52
+    Operand          go to state 53
+    Literal          go to state 54
+    ConversionExpr   go to state 55
+
+
+State 96
+
+   40 cmp_op: GEQ .
+
+    $default  reduce using rule 40 (cmp_op)
+
+
+State 97
+
+   38 cmp_op: LEQ .
+
+    $default  reduce using rule 38 (cmp_op)
+
+
+State 98
+
+   35 cmp_op: EQU .
+
+    $default  reduce using rule 35 (cmp_op)
+
+
+State 99
+
+   36 cmp_op: NEQ .
+
+    $default  reduce using rule 36 (cmp_op)
+
+
+State 100
+
+   37 cmp_op: '<' .
+
+    $default  reduce using rule 37 (cmp_op)
+
+
+State 101
+
+   39 cmp_op: '>' .
+
+    $default  reduce using rule 39 (cmp_op)
+
+
+State 102
+
+   20 Cmp_expression: Cmp_expression cmp_op . Add_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type             go to state 41
+    Add_expression   go to state 154
+    Mul_expression   go to state 48
+    Cast_expression  go to state 49
+    UnaryExpr        go to state 118
+    unary_op         go to state 51
+    PrimaryExpr      go to state 52
+    Operand          go to state 53
+    Literal          go to state 54
+    ConversionExpr   go to state 55
+
+
+State 103
+
+   41 add_op: '+' .
+
+    $default  reduce using rule 41 (add_op)
+
+
+State 104
+
+   42 add_op: '-' .
+
+    $default  reduce using rule 42 (add_op)
+
+
+State 105
+
+   22 Add_expression: Add_expression add_op . Mul_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type             go to state 41
+    Mul_expression   go to state 155
+    Cast_expression  go to state 49
+    UnaryExpr        go to state 118
+    unary_op         go to state 51
+    PrimaryExpr      go to state 52
+    Operand          go to state 53
+    Literal          go to state 54
+    ConversionExpr   go to state 55
+
+
+State 106
+
+   43 mul_op: '*' .
+
+    $default  reduce using rule 43 (mul_op)
+
+
+State 107
+
+   44 mul_op: '/' .
+
+    $default  reduce using rule 44 (mul_op)
+
+
+State 108
+
+   45 mul_op: '%' .
+
+    $default  reduce using rule 45 (mul_op)
+
+
+State 109
+
+   24 Mul_expression: Mul_expression mul_op . Cast_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type             go to state 41
+    Cast_expression  go to state 156
+    UnaryExpr        go to state 118
+    unary_op         go to state 51
+    PrimaryExpr      go to state 52
+    Operand          go to state 53
+    Literal          go to state 54
+    ConversionExpr   go to state 55
+
+
+State 110
+
+   30 assignment_op: ADD_ASSIGN .
+
+    $default  reduce using rule 30 (assignment_op)
+
+
+State 111
+
+   31 assignment_op: SUB_ASSIGN .
+
+    $default  reduce using rule 31 (assignment_op)
+
+
+State 112
+
+   32 assignment_op: MUL_ASSIGN .
+
+    $default  reduce using rule 32 (assignment_op)
+
+
+State 113
+
+   33 assignment_op: QUO_ASSIGN .
+
+    $default  reduce using rule 33 (assignment_op)
+
+
+State 114
+
+   34 assignment_op: REM_ASSIGN .
+
+    $default  reduce using rule 34 (assignment_op)
+
+
+State 115
+
+   29 assignment_op: '=' .
+
+    $default  reduce using rule 29 (assignment_op)
+
+
+State 116
+
+   14 Assignment_expression: UnaryExpr assignment_op . Assignment_expression
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Assignment_expression  go to state 157
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+
+
+State 117
+
+   28 UnaryExpr: unary_op Cast_expression .
+
+    $default  reduce using rule 28 (UnaryExpr)
+
+
+State 118
+
+   25 Cast_expression: UnaryExpr .
+
+    $default  reduce using rule 25 (Cast_expression)
+
+
+State 119
+
+   62 Statement: FunctionCall NEWLINE .
+
+    $default  reduce using rule 62 (Statement)
+
+
+State 120
+
+   72 FunctionCall: CallID '(' . ')'
+   73             | CallID '(' . Parameters_call ')'
+
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '('        shift, and go to state 38
+    ')'        shift, and go to state 158
+    '"'        shift, and go to state 39
+
+    Operand          go to state 159
+    Literal          go to state 54
+    Parameters_call  go to state 160
+
+
+State 121
+
+   63 Statement: SimpleStmt NEWLINE .
+
+    $default  reduce using rule 63 (Statement)
+
+
+State 122
+
+   61 Statement: DeclarationStmt NEWLINE .
+
+    $default  reduce using rule 61 (Statement)
+
+
+State 123
+
+   86 Block: LParantheses StatementList . RParantheses
+   90 StatementList: StatementList . Statement
+
+    VAR        shift, and go to state 16
+    NEWLINE    shift, and go to state 17
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    IF         shift, and go to state 22
+    FOR        shift, and go to state 23
+    SWITCH     shift, and go to state 24
+    CASE       shift, and go to state 25
+    PRINT      shift, and go to state 26
+    PRINTLN    shift, and go to state 27
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 30
+    RETURN     shift, and go to state 31
+    DEFAULT    shift, and go to state 32
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+    '{'        shift, and go to state 40
+    '}'        shift, and go to state 124
+
+    Type                   go to state 41
+    Expression             go to state 42
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    Statement              go to state 125
+    FunctionCall           go to state 57
+    CallID                 go to state 58
+    SimpleStmt             go to state 59
+    DeclarationStmt        go to state 60
+    IncDecStmt             go to state 61
+    Block                  go to state 62
+    LParantheses           go to state 63
+    RParantheses           go to state 161
+    IfStmt                 go to state 65
+    ForStmt                go to state 66
+    For                    go to state 67
+    SwitchStmt             go to state 68
+    SwitchPrototype        go to state 69
+    CaseStmt               go to state 70
+    Case                   go to state 71
+    Default                go to state 72
+    ReturnStmt             go to state 74
+    PrintStmt              go to state 75
+
+
+State 124
+
+   88 RParantheses: '}' .
+
+    $default  reduce using rule 88 (RParantheses)
+
+
+State 125
+
+   90 StatementList: StatementList Statement .
+
+    $default  reduce using rule 90 (StatementList)
+
+
+State 126
+
+  118 FuncBlock: StatementList RParantheses .
+
+    $default  reduce using rule 118 (FuncBlock)
+
+
+State 127
+
+   77 SimpleStmt: Expression .
+   84 IncDecStmt: Expression . INC
+   85           | Expression . DEC
+   96 ForCondition: Expression .
+
+    INC  shift, and go to state 92
+    DEC  shift, and go to state 93
+
+    '{'       reduce using rule 96 (ForCondition)
+    $default  reduce using rule 77 (SimpleStmt)
+
+
+State 128
+
+  101 InitStmt: SimpleStmt .
+
+    $default  reduce using rule 101 (InitStmt)
+
+
+State 129
+
+   97 ForStmt: For ForCondition . Block
+
+    '{'  shift, and go to state 40
+
+    Block         go to state 162
+    LParantheses  go to state 63
+
+
+State 130
+
+   98 ForStmt: For ForClause . Block
+
+    '{'  shift, and go to state 40
+
+    Block         go to state 163
+    LParantheses  go to state 63
+
+
+State 131
+
+  100 ForClause: InitStmt . ';' Condition ';' PostStmt
+
+    ';'  shift, and go to state 164
+
+
+State 132
+
+  103 SwitchStmt: SwitchPrototype Block .
+
+    $default  reduce using rule 103 (SwitchStmt)
+
+
+State 133
+
+  105 CaseStmt: Case ':' . Block
+
+    '{'  shift, and go to state 40
+
+    Block         go to state 165
+    LParantheses  go to state 63
+
+
+State 134
+
+  106 CaseStmt: Default ':' . Block
+
+    '{'  shift, and go to state 40
+
+    Block         go to state 166
+    LParantheses  go to state 63
+
+
+State 135
+
+   70 Statement: ReturnStmt NEWLINE .
+
+    $default  reduce using rule 70 (Statement)
+
+
+State 136
+
+   69 Statement: PrintStmt NEWLINE .
+
+    $default  reduce using rule 69 (Statement)
+
+
+State 137
+
+  117 ParID: ID .
+
+    $default  reduce using rule 117 (ParID)
+
+
+State 138
+
+  113 FuncParameters: '(' ')' .
+
+    $default  reduce using rule 113 (FuncParameters)
+
+
+State 139
+
+  112 FuncParameters: '(' ParameterList . ')'
+  116 ParameterList: ParameterList . ',' ParID Type
+
+    ')'  shift, and go to state 167
+    ','  shift, and go to state 168
+
+
+State 140
+
+  115 ParameterList: ParID . Type
+
+    INT     shift, and go to state 18
+    FLOAT   shift, and go to state 19
+    BOOL    shift, and go to state 20
+    STRING  shift, and go to state 21
+
+    Type  go to state 169
+
+
+State 141
+
+  110 FuncPrototype: FuncTitle FuncParameters Type . LParantheses
+
+    '{'  shift, and go to state 40
+
+    LParantheses  go to state 170
+
+
+State 142
+
+  111 FuncPrototype: FuncTitle FuncParameters LParantheses .
+
+    $default  reduce using rule 111 (FuncPrototype)
+
+
+State 143
+
+   83 VarType: Type .
+
+    $default  reduce using rule 83 (VarType)
+
+
+State 144
+
+   79 DeclarationStmt: VAR VarID VarType .
+   80                | VAR VarID VarType . '=' Expression
+   81                | VAR VarID VarType . '=' FunctionCall
+
+    '='  shift, and go to state 171
+
+    $default  reduce using rule 79 (DeclarationStmt)
+
+
+State 145
+
+   91 IfStmt: IF Condition Block . ElseStmt
+
+    ELSE  shift, and go to state 172
+
+    $default  reduce using rule 92 (ElseStmt)
+
+    ElseStmt  go to state 173
+
+
+State 146
+
+  121 PrintStmt: PRINT '(' Expression . ')'
+
+    ')'  shift, and go to state 174
+
+
+State 147
+
+  122 PrintStmt: PRINTLN '(' Expression . ')'
+
+    ')'  shift, and go to state 175
+
+
+State 148
+
+   52 Operand: '(' Expression ')' .
+
+    $default  reduce using rule 52 (Operand)
+
+
+State 149
+
+   58 Str: Str STRING_LIT .
+
+    $default  reduce using rule 58 (Str)
+
+
+State 150
+
+   57 Literal: '"' Str '"' .
+
+    $default  reduce using rule 57 (Literal)
+
+
+State 151
+
+   60 ConversionExpr: Type '(' Expression . ')'
+
+    ')'  shift, and go to state 176
+
+
+State 152
+
+   16 Lor_expression: Lor_expression LOR Land_expression .
+   18 Land_expression: Land_expression . LAND Cmp_expression
+
+    LAND  shift, and go to state 95
+
+    $default  reduce using rule 16 (Lor_expression)
+
+
+State 153
+
+   18 Land_expression: Land_expression LAND Cmp_expression .
+   20 Cmp_expression: Cmp_expression . cmp_op Add_expression
+
+    GEQ  shift, and go to state 96
+    LEQ  shift, and go to state 97
+    EQU  shift, and go to state 98
+    NEQ  shift, and go to state 99
+    '<'  shift, and go to state 100
+    '>'  shift, and go to state 101
+
+    $default  reduce using rule 18 (Land_expression)
+
+    cmp_op  go to state 102
+
+
+State 154
+
+   20 Cmp_expression: Cmp_expression cmp_op Add_expression .
+   22 Add_expression: Add_expression . add_op Mul_expression
+
+    '+'  shift, and go to state 103
+    '-'  shift, and go to state 104
+
+    $default  reduce using rule 20 (Cmp_expression)
+
+    add_op  go to state 105
+
+
+State 155
+
+   22 Add_expression: Add_expression add_op Mul_expression .
+   24 Mul_expression: Mul_expression . mul_op Cast_expression
+
+    '*'  shift, and go to state 106
+    '/'  shift, and go to state 107
+    '%'  shift, and go to state 108
+
+    $default  reduce using rule 22 (Add_expression)
+
+    mul_op  go to state 109
+
+
+State 156
+
+   24 Mul_expression: Mul_expression mul_op Cast_expression .
+
+    $default  reduce using rule 24 (Mul_expression)
+
+
+State 157
+
+   14 Assignment_expression: UnaryExpr assignment_op Assignment_expression .
+
+    $default  reduce using rule 14 (Assignment_expression)
+
+
+State 158
+
+   72 FunctionCall: CallID '(' ')' .
+
+    $default  reduce using rule 72 (FunctionCall)
+
+
+State 159
+
+   75 Parameters_call: Operand .
+
+    $default  reduce using rule 75 (Parameters_call)
+
+
+State 160
+
+   73 FunctionCall: CallID '(' Parameters_call . ')'
+   76 Parameters_call: Parameters_call . ',' Operand
+
+    ')'  shift, and go to state 177
+    ','  shift, and go to state 178
+
+
+State 161
+
+   86 Block: LParantheses StatementList RParantheses .
+
+    $default  reduce using rule 86 (Block)
+
+
+State 162
+
+   97 ForStmt: For ForCondition Block .
+
+    $default  reduce using rule 97 (ForStmt)
+
+
+State 163
+
+   98 ForStmt: For ForClause Block .
+
+    $default  reduce using rule 98 (ForStmt)
+
+
+State 164
+
+  100 ForClause: InitStmt ';' . Condition ';' PostStmt
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 81
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    Condition              go to state 179
+
+
+State 165
+
+  105 CaseStmt: Case ':' Block .
+
+    $default  reduce using rule 105 (CaseStmt)
+
+
+State 166
+
+  106 CaseStmt: Default ':' Block .
+
+    $default  reduce using rule 106 (CaseStmt)
+
+
+State 167
+
+  112 FuncParameters: '(' ParameterList ')' .
+
+    $default  reduce using rule 112 (FuncParameters)
+
+
+State 168
+
+  116 ParameterList: ParameterList ',' . ParID Type
+
+    ID  shift, and go to state 137
+
+    ParID  go to state 180
+
+
+State 169
+
+  115 ParameterList: ParID Type .
+
+    $default  reduce using rule 115 (ParameterList)
+
+
+State 170
+
+  110 FuncPrototype: FuncTitle FuncParameters Type LParantheses .
+
+    $default  reduce using rule 110 (FuncPrototype)
+
+
+State 171
+
+   80 DeclarationStmt: VAR VarID VarType '=' . Expression
+   81                | VAR VarID VarType '=' . FunctionCall
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 30
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 181
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    FunctionCall           go to state 182
+    CallID                 go to state 58
+
+
+State 172
+
+   93 ElseStmt: ELSE . IfStmt
+   94         | ELSE . Block
+
+    IF   shift, and go to state 22
+    '{'  shift, and go to state 40
+
+    Block         go to state 183
+    LParantheses  go to state 63
+    IfStmt        go to state 184
+
+
+State 173
+
+   91 IfStmt: IF Condition Block ElseStmt .
+
+    $default  reduce using rule 91 (IfStmt)
+
+
+State 174
+
+  121 PrintStmt: PRINT '(' Expression ')' .
+
+    $default  reduce using rule 121 (PrintStmt)
+
+
+State 175
+
+  122 PrintStmt: PRINTLN '(' Expression ')' .
+
+    $default  reduce using rule 122 (PrintStmt)
+
+
+State 176
+
+   60 ConversionExpr: Type '(' Expression ')' .
+
+    $default  reduce using rule 60 (ConversionExpr)
+
+
+State 177
+
+   73 FunctionCall: CallID '(' Parameters_call ')' .
+
+    $default  reduce using rule 73 (FunctionCall)
+
+
+State 178
+
+   76 Parameters_call: Parameters_call ',' . Operand
+
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Operand  go to state 185
+    Literal  go to state 54
+
+
+State 179
+
+  100 ForClause: InitStmt ';' Condition . ';' PostStmt
+
+    ';'  shift, and go to state 186
+
+
+State 180
+
+  116 ParameterList: ParameterList ',' ParID . Type
+
+    INT     shift, and go to state 18
+    FLOAT   shift, and go to state 19
+    BOOL    shift, and go to state 20
+    STRING  shift, and go to state 21
+
+    Type  go to state 187
+
+
+State 181
+
+   80 DeclarationStmt: VAR VarID VarType '=' Expression .
+
+    $default  reduce using rule 80 (DeclarationStmt)
+
+
+State 182
+
+   81 DeclarationStmt: VAR VarID VarType '=' FunctionCall .
+
+    $default  reduce using rule 81 (DeclarationStmt)
+
+
+State 183
+
+   94 ElseStmt: ELSE Block .
+
+    $default  reduce using rule 94 (ElseStmt)
+
+
+State 184
+
+   93 ElseStmt: ELSE IfStmt .
+
+    $default  reduce using rule 93 (ElseStmt)
+
+
+State 185
+
+   76 Parameters_call: Parameters_call ',' Operand .
+
+    $default  reduce using rule 76 (Parameters_call)
+
+
+State 186
+
+  100 ForClause: InitStmt ';' Condition ';' . PostStmt
+
+    INT        shift, and go to state 18
+    FLOAT      shift, and go to state 19
+    BOOL       shift, and go to state 20
+    STRING     shift, and go to state 21
+    TRUE       shift, and go to state 28
+    FALSE      shift, and go to state 29
+    ID         shift, and go to state 80
+    INT_LIT    shift, and go to state 33
+    FLOAT_LIT  shift, and go to state 34
+    '+'        shift, and go to state 35
+    '-'        shift, and go to state 36
+    '!'        shift, and go to state 37
+    '('        shift, and go to state 38
+    '"'        shift, and go to state 39
+
+    Type                   go to state 41
+    Expression             go to state 42
+    Assignment_expression  go to state 43
+    Lor_expression         go to state 44
+    Land_expression        go to state 45
+    Cmp_expression         go to state 46
+    Add_expression         go to state 47
+    Mul_expression         go to state 48
+    Cast_expression        go to state 49
+    UnaryExpr              go to state 50
+    unary_op               go to state 51
+    PrimaryExpr            go to state 52
+    Operand                go to state 53
+    Literal                go to state 54
+    ConversionExpr         go to state 55
+    SimpleStmt             go to state 188
+    IncDecStmt             go to state 61
+    PostStmt               go to state 189
+
+
+State 187
+
+  116 ParameterList: ParameterList ',' ParID Type .
+
+    $default  reduce using rule 116 (ParameterList)
+
+
+State 188
+
+  102 PostStmt: SimpleStmt .
+
+    $default  reduce using rule 102 (PostStmt)
+
+
+State 189
+
+  100 ForClause: InitStmt ';' Condition ';' PostStmt .
+
+    $default  reduce using rule 100 (ForClause)
